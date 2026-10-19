@@ -1,6 +1,6 @@
 # Calculator — CI/CD Pipeline (GitHub Actions)
 
-[![CI](https://github.com/OWNER_PLACEHOLDER/REPO_PLACEHOLDER/actions/workflows/ci-calculator.yml/badge.svg)](https://github.com/OWNER_PLACEHOLDER/REPO_PLACEHOLDER/actions/workflows/ci-calculator.yml)
+[![CI](https://github.com/xubowen1234/calculator/actions/workflows/ci-calculator.yml/badge.svg)](https://github.com/xubowen1234/calculator/actions/workflows/ci-calculator.yml)
 
 A simple command-line calculator built in Java with Maven, continuously integrated
 with **GitHub Actions** (Lab 3–5 project, Software Development Tools).
