@@ -23,7 +23,7 @@ public class Calculator {
      * Returns the difference a - b.
      */
     public double subtract(double a, double b) {
-        return a + b;   // INTENTIONAL BUG for the red-CI demo: should be a - b
+        return a - b;
     }
 
     /**
