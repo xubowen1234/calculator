@@ -1,0 +1,63 @@
+# =============================================================================
+# GitHub Actions workflow for the Calculator project (Lab 5)
+# File: .github/workflows/ci-calculator.yml
+#
+# What this file does: every time code is pushed to main (or a pull request is
+# opened/updated against main), GitHub boots a fresh Ubuntu virtual machine,
+# checks out the repository, installs a JDK, caches the Maven repository and
+# runs the full build (compile + all JUnit 5 tests from Lab 4).
+# If any step fails, the whole run turns red and the author is notified.
+# =============================================================================
+
+# 'name' is only a human-readable label shown on the Actions tab.
+name: CI for Calculator
+
+# 'on' defines the trigger rules (the "alarm clock" of the workflow).
+#   - push: run the workflow whenever commits are pushed to the 'main' branch
+#   - pull_request: also run it when a pull request targets 'main',
+#     so a merge is blocked until the build is green
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# A workflow is made of one or more 'jobs'. Each job runs on its own machine
+# (runner). Here we have a single job called 'build-and-test'.
+jobs:
+  build-and-test:
+    # 'runs-on' selects the runner image: a clean Ubuntu VM, latest version.
+    runs-on: ubuntu-latest
+
+    # Build matrix (bonus task): run the SAME job on several JDK versions in
+    # parallel. GitHub starts one VM per matrix entry.
+    #  - 17: the Java release the project targets (maven.compiler.release=17)
+    #  - 21: the JDK used in the local development environment (IntelliJ JBR)
+    strategy:
+      matrix:
+        java-version: [17, 21]
+
+    # 'steps' are the commands executed in order on that machine.
+    steps:
+      # 1. Download the repository source code into the runner.
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      # 2. Install the JDK for this matrix entry and cache the local Maven
+      #    repository (~/.m2) so dependencies are not re-downloaded on every
+      #    run. Caching is the cheapest way to keep builds fast.
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java-version }}
+          cache: maven
+
+      # 3. Compile all Java sources exactly like we do locally.
+      - name: Compile all sources
+        run: mvn -B clean compile
+
+      # 4. Execute the whole JUnit 5 test suite from Lab 4.
+      #    The build fails (red) if any test fails.
+      - name: Run JUnit tests
+        run: mvn -B test
