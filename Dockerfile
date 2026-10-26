@@ -37,9 +37,10 @@ COPY src ./src
 RUN mvn -B package -DskipTests
 
 # --- Stage 2: minimal runtime image --------------------------
-# openjdk:17-jre-slim is a Debian-slim image with only the Java
-# runtime environment — no Maven, no compiler, no build tools.
-FROM openjdk:17-jre-slim
+# eclipse-temurin:17-jre is the maintained Adoptium Temurin JRE image
+# (the old openjdk:17-jre-slim tag has been retired on Docker Hub).
+# It contains only the Java runtime, no Maven/compiler/build tools.
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
